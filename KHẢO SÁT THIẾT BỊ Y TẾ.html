@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khảo sát Thiết bị Y tế</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0f766e;
+            --primary-light: #14b8a6;
+            --primary-dark: #0d5a53;
+            --accent: #f59e0b;
+            --accent-light: #fbbf24;
+            --error: #ef4444;
+            --success: #10b981;
+            --bg-light: #f8fafc;
+            --bg-white: #ffffff;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-dark);
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        .form-card {
+            background: var(--bg-white);
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            padding: 40px;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        .form-group {
+            margin-bottom: 32px;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .form-group:nth-child(n) { animation-delay: calc(n * 0.05s); }
+
+        .form-label {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .required {
+            color: var(--error);
+        }
+
+        .form-description {
+            font-size: 13px;
+            color: var(--text-gray);
+            margin-top: 4px;
+            font-weight: 300;
+        }
+
+        /* Input text */
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            color: var(--text-dark);
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            background-color: #f0fdf9;
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Radio buttons */
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+        }
+
+        input[type="radio"] {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            cursor: pointer;
+            margin-right: 12px;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        input[type="radio"]:hover {
+            border-color: var(--primary-light);
+            background-color: #f0fdf9;
+        }
+
+        input[type="radio"]:checked {
+            background: var(--primary-light);
+            border-color: var(--primary-light);
+            box-shadow: inset 0 0 0 3px white;
+        }
+
+        .radio-label {
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text-dark);
+            flex: 1;
+        }
+
+        /* Checkboxes */
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+
+        input[type="checkbox"] {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 12px;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        input[type="checkbox"]:hover {
+            border-color: var(--primary-light);
+            background-color: #f0fdf9;
+        }
+
+        input[type="checkbox"]:checked {
+            background: var(--primary-light);
+            border-color: var(--primary-light);
+        }
+
+        input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .checkbox-label {
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text-dark);
+            flex: 1;
+        }
+
+        /* Likert scale */
+        .likert-scale {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+
+        .likert-item {
+            flex: 1;
+            min-width: 70px;
+        }
+
+        .likert-item input[type="radio"] {
+            display: none;
+        }
+
+        .likert-item label {
+            display: block;
+            padding: 10px;
+            text-align: center;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            background: var(--bg-light);
+        }
+
+        .likert-item input[type="radio"]:checked + label {
+            background: var(--primary-light);
+            color: white;
+            border-color: var(--primary-light);
+        }
+
+        .likert-item label:hover {
+            border-color: var(--primary-light);
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
+            justify-content: space-between;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 120px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(15, 118, 110, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: var(--bg-light);
+            color: var(--text-dark);
+            border: 2px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary-light);
+            background: #f0fdf9;
+        }
+
+        .success-message {
+            background: var(--success);
+            color: white;
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .success-message.show {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .form-meta {
+            font-size: 12px;
+            color: var(--text-gray);
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .form-card {
+                padding: 24px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .button-group {
+                flex-direction: column-reverse;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .likert-scale {
+                gap: 4px;
+            }
+
+            .likert-item {
+                min-width: 60px;
+            }
+
+            .likert-item label {
+                font-size: 11px;
+                padding: 8px 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 Khảo sát Thiết bị Y tế</h1>
+            <p>Cảm ơn bạn đã dành thời gian để chia sẻ ý kiến của mình</p>
+        </div>
+
+        <div class="form-card">
+            <div class="success-message" id="successMessage">
+                ✓ Cảm ơn bạn! Dữ liệu đã được lưu lại
+            </div>
+
+            <form id="surveyForm">
+                <!-- Câu 1 -->
+                <div class="form-group">
+                    <label class="form-label">
+                        1. Bạn đã từng nghe hoặc biết về "thiết bị y tế" chưa? <span class="required">*</span>
+                    </label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="q1_1" name="q1" value="Chưa từng nghe" required>
+                            <label for="q1_1" class="radio-label">Chưa từng nghe</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="q1_2" name="q1" value="Có nghe nhưng chưa hiểu rõ">
+                            <label for="q1_2" class="radio-label">Có nghe nhưng chưa hiểu rõ</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="q1_3" name="q1" value="Có biết khá rõ">
+                            <label for="q1_3" class="radio-label">Có biết khá rõ</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="q1_4" name="q1" value="Hiểu rất rõ">
+                            <label for="q1_4" class="radio-label">Hiểu rất rõ</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Câu 2 -->
+                <div class="form-group">
+                    <label class="form-label">
+                        2. Theo bạn, "thiết bị y tế" là gì? <span class="required">*</span>
+                    </label>
+                    <p class="form-description">Vui lòng trả lời bằng lời của bạn</p>
+                    <textarea name="q2" placeholder="Nhập câu trả lời của bạn..." required></textarea>
+                </div>
+
+                <!-- Câu 3 -->
+                <div class="form-group">
+                    <label class="form-label">
+                        3. Hiện tại bạn có đang mắc bệnh lý nào cần theo dõi hoặc hỗ trợ bằng thiết bị y tế không? <span class="required">*</span>
+                    </label>
+                    <p class="form-description">Chọn tất cả những lựa chọn phù hợp</p>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q3_1" name="q3" value="Cao huyết áp">
+                            <label for="q3_1" class="checkbox-label">Cao huyết áp</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q3_2" name="q3" value="Tiểu đường">
+                            <label for="q3_2" class="checkbox-label">Tiểu đường</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q3_3" name="q3" value="Bệnh tim mạch">
+                            <label for="q3_3" class="checkbox-label">Bệnh tim mạch</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q3_4" name="q3" value="Bệnh hô hấp (hen suyễn, COPD)">
+                            <label for="q3_4" class="checkbox-label">Bệnh hô hấp (hen suyễn, COPD)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q3_5" name="q3" value="Đau khớp/xương">
+                            <label for="q3_5" class="checkbox-label">Đau khớp/xương</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q3_6" name="q3" value="Béo phì">
+                            <label for="q3_6" class="checkbox-label">Béo phì</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q3_7" name="q3" value="Không có bệnh lý nào">
+                            <label for="q3_7" class="checkbox-label">Không có bệnh lý nào</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q3_other" name="q3" value="Khác">
+                            <label for="q3_other" class="checkbox-label">Khác (ghi rõ)</label>
+                        </div>
+                        <input type="text" id="q3_other_text" name="q3_other_text" placeholder="Ghi rõ bệnh lý khác..." style="margin-left: 32px; margin-top: 8px; display: none;">
+                    </div>
+                </div>
+
+                <!-- Câu 4 -->
+                <div class="form-group">
+                    <label class="form-label">
+                        4. Bạn thường nghĩ mình cần dùng thiết bị y tế trong trường hợp nào? <span class="required">*</span>
+                    </label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q4_1" name="q4" value="Khi có bác sĩ/nhân viên y tế khuyên dùng">
+                            <label for="q4_1" class="checkbox-label">Khi có bác sĩ/nhân viên y tế khuyên dùng</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q4_2" name="q4" value="Khi tự theo dõi sức khỏe tại nhà">
+                            <label for="q4_2" class="checkbox-label">Khi tự theo dõi sức khỏe tại nhà</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q4_3" name="q4" value="Khi người thân/bạn bè gợi ý">
+                            <label for="q4_3" class="checkbox-label">Khi người thân/bạn bè gợi ý</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q4_4" name="q4" value="Khi thấy quảng cáo/mạng xã hội">
+                            <label for="q4_4" class="checkbox-label">Khi thấy quảng cáo/mạng xã hội</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q4_5" name="q4" value="Khi đã từng có bệnh trước đó">
+                            <label for="q4_5" class="checkbox-label">Khi đã từng có bệnh trước đó</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q4_other" name="q4" value="Khác">
+                            <label for="q4_other" class="checkbox-label">Khác (ghi rõ)</label>
+                        </div>
+                        <input type="text" id="q4_other_text" name="q4_other_text" placeholder="Ghi rõ..." style="margin-left: 32px; margin-top: 8px; display: none;">
+                    </div>
+                </div>
+
+                <!-- Câu 5 -->
+                <div class="form-group">
+                    <label class="form-label">
+                        5. Ai là người tác động nhiều nhất đến quyết định dùng thiết bị y tế của bạn? <span class="required">*</span>
+                    </label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="q5_1" name="q5" value="Bác sĩ/nhân viên y tế" required>
+                            <label for="q5_1" class="radio-label">Bác sĩ/nhân viên y tế</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="q5_2" name="q5" value="Người thân">
+                            <label for="q5_2" class="radio-label">Người thân</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="q5_3" name="q5" value="Bạn bè/đồng nghiệp">
+                            <label for="q5_3" class="radio-label">Bạn bè/đồng nghiệp</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="q5_4" name="q5" value="Dược sĩ/nhà thuốc">
+                            <label for="q5_4" class="radio-label">Dược sĩ/nhà thuốc</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="q5_5" name="q5" value="Quảng cáo/KOL/mạng xã hội">
+                            <label for="q5_5" class="radio-label">Quảng cáo/KOL/mạng xã hội</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="q5_6" name="q5" value="Tự quyết định">
+                            <label for="q5_6" class="radio-label">Tự quyết định</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Câu 6 -->
+                <div class="form-group">
+                    <label class="form-label">
+                        6. Trước khi mua hoặc dùng thiết bị y tế, bạn thường tìm hiểu thông tin qua kênh nào? <span class="required">*</span>
+                    </label>
+                    <p class="form-description">Chọn tất cả những lựa chọn phù hợp</p>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q6_1" name="q6" value="Bác sĩ/nhân viên y tế">
+                            <label for="q6_1" class="checkbox-label">Bác sĩ/nhân viên y tế</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q6_2" name="q6" value="Nhà thuốc/cửa hàng">
+                            <label for="q6_2" class="checkbox-label">Nhà thuốc/cửa hàng</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q6_3" name="q6" value="Google/online">
+                            <label for="q6_3" class="checkbox-label">Google/online</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q6_4" name="q6" value="Facebook/TikTok/YouTube">
+                            <label for="q6_4" class="checkbox-label">Facebook/TikTok/YouTube</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q6_5" name="q6" value="Người quen">
+                            <label for="q6_5" class="checkbox-label">Người quen</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q6_6" name="q6" value="Website hãng">
+                            <label for="q6_6" class="checkbox-label">Website hãng</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q6_other" name="q6" value="Khác">
+                            <label for="q6_other" class="checkbox-label">Khác (ghi rõ)</label>
+                        </div>
+                        <input type="text" id="q6_other_text" name="q6_other_text" placeholder="Ghi rõ..." style="margin-left: 32px; margin-top: 8px; display: none;">
+                    </div>
+                </div>
+
+                <!-- Câu 7 -->
+                <div class="form-group">
+                    <label class="form-label">
+                        7. Bạn thường mua thiết bị y tế ở đâu? <span class="required">*</span>
+                    </label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="q7_1" name="q7" value="Nhà thuốc" required>
+                            <label for="q7_1" class="radio-label">Nhà thuốc</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="q7_2" name="q7" value="Cửa hàng thiết bị y tế">
+                            <label for="q7_2" class="radio-label">Cửa hàng thiết bị y tế</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="q7_3" name="q7" value="Bệnh viện/phòng khám">
+                            <label for="q7_3" class="radio-label">Bệnh viện/phòng khám</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="q7_4" name="q7" value="Sàn TMĐT (Shopee, Lazada)">
+                            <label for="q7_4" class="radio-label">Sàn TMĐT (Shopee, Lazada)</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="q7_5" name="q7" value="Website chính hãng">
+                            <label for="q7_5" class="radio-label">Website chính hãng</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="q7_6" name="q7" value="Mua từ người quen">
+                            <label for="q7_6" class="radio-label">Mua từ người quen</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="q7_7" name="q7" value="Chưa từng mua">
+                            <label for="q7_7" class="radio-label">Chưa từng mua</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Câu 8 -->
+                <div class="form-group">
+                    <label class="form-label">
+                        8. Bạn lo ngại điều gì nhất khi sử dụng thiết bị y tế? <span class="required">*</span>
+                    </label>
+                    <p class="form-description">Chọn tất cả những lựa chọn phù hợp</p>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q8_1" name="q8" value="Dùng sai cách">
+                            <label for="q8_1" class="checkbox-label">Dùng sai cách</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q8_2" name="q8" value="Không an toàn">
+                            <label for="q8_2" class="checkbox-label">Không an toàn</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q8_3" name="q8" value="Kết quả không chính xác">
+                            <label for="q8_3" class="checkbox-label">Kết quả không chính xác</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q8_4" name="q8" value="Hàng giả/kém chất lượng">
+                            <label for="q8_4" class="checkbox-label">Hàng giả/kém chất lượng</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q8_5" name="q8" value="Khó bảo hành">
+                            <label for="q8_5" class="checkbox-label">Khó bảo hành</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q8_6" name="q8" value="Không biết vệ sinh">
+                            <label for="q8_6" class="checkbox-label">Không biết vệ sinh</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q8_7" name="q8" value="Không lo ngại">
+                            <label for="q8_7" class="checkbox-label">Không lo ngại</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q8_other" name="q8" value="Khác">
+                            <label for="q8_other" class="checkbox-label">Khác (ghi rõ)</label>
+                        </div>
+                        <input type="text" id="q8_other_text" name="q8_other_text" placeholder="Ghi rõ..." style="margin-left: 32px; margin-top: 8px; display: none;">
+                    </div>
+                </div>
+
+                <!-- Câu 9 -->
+                <div class="form-group">
+                    <label class="form-label">
+                        9. Bạn có tin tưởng thông tin về thiết bị y tế trên mạng xã hội không? <span class="required">*</span>
+                    </label>
+                    <div class="likert-scale">
+                        <div class="likert-item">
+                            <input type="radio" id="q9_1" name="q9" value="Không tin" required>
+                            <label for="q9_1">Không tin</label>
+                        </div>
+                        <div class="likert-item">
+                            <input type="radio" id="q9_2" name="q9" value="Ít tin">
+                            <label for="q9_2">Ít tin</label>
+                        </div>
+                        <div class="likert-item">
+                            <input type="radio" id="q9_3" name="q9" value="Bình thường">
+                            <label for="q9_3">Bình thường</label>
+                        </div>
+                        <div class="likert-item">
+                            <input type="radio" id="q9_4" name="q9" value="Khá tin">
+                            <label for="q9_4">Khá tin</label>
+                        </div>
+                        <div class="likert-item">
+                            <input type="radio" id="q9_5" name="q9" value="Rất tin">
+                            <label for="q9_5">Rất tin</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Câu 10 -->
+                <div class="form-group">
+                    <label class="form-label">
+                        10. Nếu được tư vấn đầy đủ, bạn có sẵn sàng sử dụng thiết bị y tế tại nhà không? <span class="required">*</span>
+                    </label>
+                    <div class="likert-scale">
+                        <div class="likert-item">
+                            <input type="radio" id="q10_1" name="q10" value="Chắc chắn không" required>
+                            <label for="q10_1">Chắc chắn không</label>
+                        </div>
+                        <div class="likert-item">
+                            <input type="radio" id="q10_2" name="q10" value="Có thể không">
+                            <label for="q10_2">Có thể không</label>
+                        </div>
+                        <div class="likert-item">
+                            <input type="radio" id="q10_3" name="q10" value="Phân vân">
+                            <label for="q10_3">Phân vân</label>
+                        </div>
+                        <div class="likert-item">
+                            <input type="radio" id="q10_4" name="q10" value="Có thể có">
+                            <label for="q10_4">Có thể có</label>
+                        </div>
+                        <div class="likert-item">
+                            <input type="radio" id="q10_5" name="q10" value="Chắc chắn có">
+                            <label for="q10_5">Chắc chắn có</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="button-group">
+                    <button type="reset" class="btn-secondary">Làm lại</button>
+                    <button type="submit" class="btn-primary">Gửi khảo sát</button>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+
+                <div class="form-meta">
+                    Thời gian hoàn thành: <span id="completionTime">0</span> giây
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('surveyForm');
+        const successMessage = document.getElementById('successMessage');
+        const progressFill = document.getElementById('progressFill');
+        const completionTimeSpan = document.getElementById('completionTime');
+        const allInputs = form.querySelectorAll('input[required], textarea[required]');
+        let startTime = Date.now();
+
+        // Show/hide "khác" text inputs
+        document.getElementById('q3_other').addEventListener('change', function() {
+            document.getElementById('q3_other_text').style.display = this.checked ? 'block' : 'none';
+        });
+
+        document.getElementById('q4_other').addEventListener('change', function() {
+            document.getElementById('q4_other_text').style.display = this.checked ? 'block' : 'none';
+        });
+
+        document.getElementById('q6_other').addEventListener('change', function() {
+            document.getElementById('q6_other_text').style.display = this.checked ? 'block' : 'none';
+        });
+
+        document.getElementById('q8_other').addEventListener('change', function() {
+            document.getElementById('q8_other_text').style.display = this.checked ? 'block' : 'none';
+        });
+
+        // Update progress bar
+        function updateProgress() {
+            const filledCount = Array.from(form.elements).filter(el => {
+                if (el.type === 'checkbox') return el.checked;
+                if (el.type === 'radio') return el.checked;
+                if (el.type === 'text' || el.tagName === 'TEXTAREA') return el.value.trim() !== '';
+                return false;
+            }).length;
+
+            const progress = (filledCount / allInputs.length) * 100;
+            progressFill.style.width = progress + '%';
+        }
+
+        form.addEventListener('input', updateProgress);
+        form.addEventListener('change', updateProgress);
+
+        // Update completion time
+        setInterval(() => {
+            const seconds = Math.round((Date.now() - startTime) / 1000);
+            completionTimeSpan.textContent = seconds;
+        }, 1000);
+
+        // Handle form submission
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Collect form data
+            const formData = new FormData(form);
+            const data = {};
+            
+            formData.forEach((value, key) => {
+                if (data[key]) {
+                    if (Array.isArray(data[key])) {
+                        data[key].push(value);
+                    } else {
+                        data[key] = [data[key], value];
+                    }
+                } else {
+                    data[key] = value;
+                }
+            });
+
+            // Add timestamp
+            data.timestamp = new Date().toLocaleString('vi-VN');
+
+            // Save to localStorage
+            let responses = JSON.parse(localStorage.getItem('surveyResponses') || '[]');
+            responses.push(data);
+            localStorage.setItem('surveyResponses', JSON.stringify(responses));
+
+            // Try to save to Google Sheets or download as JSON
+            console.log('Form data:', data);
+            
+            // Show success message
+            successMessage.classList.add('show');
+            setTimeout(() => {
+                successMessage.classList.remove('show');
+            }, 3000);
+
+            // Auto-download as JSON
+            downloadResults();
+
+            // Reset form
+            setTimeout(() => {
+                form.reset();
+                progressFill.style.width = '0%';
+                startTime = Date.now();
+            }, 2000);
+        });
+
+        function downloadResults() {
+            const responses = JSON.parse(localStorage.getItem('surveyResponses') || '[]');
+            const dataStr = JSON.stringify(responses, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `survey_responses_${new Date().toISOString().slice(0,10)}.json`;
+            link.click();
+        }
+
+        // Listen for shortcut key to download results
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+                e.preventDefault();
+                downloadResults();
+            }
+        });
+    </script>
+</body>
+</html>
